@@ -97,7 +97,7 @@ class BinarySearchTree:
             self.left.calculate_sizes()
         elif self.key < key:
             if self.right is None:
-                self.right = BinarySearchTree(self.debugger)
+                self.right = BinarySearchTree(sel.debugger)
             self.right.insert(key)
             self.right.calculate_sizes()
         return self
