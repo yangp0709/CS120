@@ -1,3 +1,6 @@
+from re import A
+
+
 class BinarySearchTree:
     # left: BinarySearchTree
     # right: BinarySearchTree
@@ -60,7 +63,7 @@ class BinarySearchTree:
         if left_size > ind and self.left is not None:
             return self.left.select(ind)
         if left_size < ind and self.right is not None:
-            return self.right.select(ind - left_size -1)
+            return self.right.select(ind - left_size - 1) #Take away what is already selected from the left and minus the root node
         return None
 
 
@@ -94,12 +97,12 @@ class BinarySearchTree:
             if self.left is None:
                 self.left = BinarySearchTree(self.debugger)
             self.left.insert(key)
-            self.left.calculate_sizes()
+            self.size += 1 #Add one to the side that a node is added instead of calculating the entire tree 
         elif self.key < key:
             if self.right is None:
-                self.right = BinarySearchTree(sel.debugger)
+                self.right = BinarySearchTree(self.debugger)
             self.right.insert(key)
-            self.right.calculate_sizes()
+            self.size += 1 #Add one to the side that a node is added instead of calculating the entire tree 
         return self
 
     
@@ -125,9 +128,51 @@ class BinarySearchTree:
         12
         /
        11 
+
+    The implementation of rotate to size-agumented BSTs was no different than the algorithm we used and defined in class.
+    It has runtime of O(1) because only one step pointers were used and one step computations were used for size. 
+    The new rotation operation preserves the invariant of correct size-agumentations in that when we rotate left y size replaces x 
+    size and x size is just the size of its two children plus itself as shown in Figure 11.2. This is similar for rotate right where
+    y size becomes what x size used to be and x size is just the the size of its two children plus itself as shown in Figure 11.3.
     '''
+    
     def rotate(self, direction, child_side):
-        # Your code goes here
+
+        if direction == "L" and child_side == "R":
+            a = self.right
+            self.right = a.right
+            a.right = self.right.left
+            self.right.left = a
+            self.right.size = a.size
+            a.size = 1 + (a.right.size if a.right else 0) + (a.left.size if a.left else 0)
+
+
+        if direction == "L" and child_side == "L":
+            a = self.left
+            self.left = a.right
+            a.right = self.left.left
+            self.left.left = a
+            self.left.size = a.size
+            a.size = 1 + (a.right.size if a.right else 0) + (a.left.size if a.left else 0)
+
+        if direction == "R" and child_side == "L":
+            a = self.left
+            self.left = a.left
+            a.left = self.left.right
+            self.left.right = a
+            self.left.size = a.size
+            a.size = 1 + (a.right.size if a.right else 0) + (a.left.size if a.left else 0)
+
+
+        if direction == "R" and child_side == "R":
+            a = self.right
+            self.right = a.left
+            a.left = self.right.right
+            self.right.right = a
+            self.right.size = a.size
+            a.size = 1 + (a.right.size if a.right else 0) + (a.left.size if a.left else 0)
+
+        
         return self
 
     def print_bst(self):
