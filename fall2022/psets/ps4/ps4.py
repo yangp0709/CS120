@@ -6,6 +6,7 @@ import time
 import math
 import random
 
+from statistics import median
 random.seed(120)
 
 #
@@ -36,10 +37,45 @@ def QuickSelect(arr, i):
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
     # ... see the helper functions below
 
-    
+    AL = []
+    AM = []
+    AE = []
 
-    pass
-    return (0, -1)
+    if len(arr) <= 1: 
+        return arr[0]
+
+    else:
+        a = get_random_index(arr)
+        b = get_random_index(arr)
+        c = get_random_index(arr)
+
+        med = [a,b,c]
+        
+        p = median(med)
+        
+        # p = get_random_index(arr)
+
+        P  = arr[p][0]
+
+        for j in range(len(arr)):
+            if arr[j][0] < P:
+                AL.append(arr[j])
+
+            elif arr[j][0] > P:
+                AM.append(arr[j])
+
+            else:
+                AE.append(arr[j])
+
+        if i < len(AL):
+            return QuickSelect(AL,i)
+
+        elif i >= (len(AL) + len(AE)):
+            return QuickSelect(AM, i - len(AL) - len(AE))
+
+        else:
+            return AE[0]
+
 
 
 '''
@@ -57,8 +93,17 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
-    pass
-    return [(0, -1)] * len(query_list)  # replace this line with your return
+
+    lists = []
+
+    sorted = MergeSort(arr)
+
+    for i in range(len(query_list)):
+        lists.append(sorted[query_list[i]])
+        
+    return lists  # replace this line with your return
+
+    
 
 
 ##################################
@@ -70,12 +115,12 @@ def MergeSortSelect(arr, query_list):
 
 def experiments():
     # Edit this parameter
-    k = [1, 1, 1, 1, 1]
+    k = [22, 25, 27, 29, 30]
 
     # Feel free to edit these initial parameters
 
     RUNS = 20  # Number of runs for each trial; more runs means better distributions approximation but longer experiment
-    HEIGHT = 1.5  # Height of a chart
+    HEIGHT = 1.25  # Height of a chart
     WIDTH = 3   # Width of a chart
     # Determines if subcharts share the same axis scale/limits
     # ... since the trails cover a wide range, sharing the same scale/limits can cause some lines to be too small.
