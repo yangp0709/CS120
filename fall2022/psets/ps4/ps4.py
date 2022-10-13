@@ -45,6 +45,45 @@ def QuickSelect(arr, i):
         return arr[0]
 
     else:
+        
+        p = get_random_index(arr)
+
+        P  = arr[p][0]
+
+        for j in range(len(arr)):
+            if arr[j][0] < P:
+                AL.append(arr[j])
+
+            elif arr[j][0] > P:
+                AM.append(arr[j])
+
+            else:
+                AE.append(arr[j])
+
+        if i < len(AL):
+            return QuickSelect(AL,i)
+
+        elif i >= (len(AL) + len(AE)):
+            return QuickSelect(AM, i - len(AL) - len(AE))
+
+        else:
+            return AE[0]
+
+
+def QuickSelectMedian(arr, i):
+    # Your code here
+
+    # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
+    # ... see the helper functions below
+
+    AL = []
+    AM = []
+    AE = []
+
+    if len(arr) <= 1: 
+        return arr[0]
+
+    else:
         a = get_random_index(arr)
         b = get_random_index(arr)
         c = get_random_index(arr)
@@ -52,8 +91,6 @@ def QuickSelect(arr, i):
         med = [a,b,c]
         
         p = median(med)
-        
-        # p = get_random_index(arr)
 
         P  = arr[p][0]
 
@@ -90,6 +127,8 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 '''
 
 
+
+
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
@@ -102,7 +141,6 @@ def MergeSortSelect(arr, query_list):
         lists.append(sorted[query_list[i]])
         
     return lists  # replace this line with your return
-
 
     
 
@@ -161,6 +199,20 @@ def experiments():
                 k_record.append(ki)
                 ms_record.append(seconds * 1000)  # Convert seconds to milliseconds
                 algorithm_record.append("QuickSelect")
+
+             # QuickSelectMedian Runs
+            for _ in range(RUNS):
+                # Record Time Taken to Solve All Queries
+                start_time = time.time()
+                for q in queries:
+                    # Copy dataset just to be safe
+                    QuickSelectMedian(dataset_size_n.copy(), q)
+                seconds = time.time() - start_time
+                # Record this trial run
+                n_record.append(ni)
+                k_record.append(ki)
+                ms_record.append(seconds * 1000)  # Convert seconds to milliseconds
+                algorithm_record.append("QuickSelectMedian")
 
             # MergeSort Runs
             for _ in range(RUNS):
