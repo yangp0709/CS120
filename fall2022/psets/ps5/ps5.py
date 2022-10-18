@@ -1,3 +1,4 @@
+from ctypes import sizeof
 from itertools import product, combinations
 
 '''
@@ -129,9 +130,26 @@ def bfs_2_coloring(G, precolored_nodes=None):
     
     # TODO: Complete this function by implementing two-coloring using the colors 0 and 1.
     # If there is no valid coloring, reset all the colors to None using G.reset_colors()
-    
-    G.reset_colors()
-    return None
+
+    for node in range(G.N):
+
+        if node not in visited:
+            adj_node_color = set()
+
+            for i in G.edges[node]:
+                adj_node_color.add(G.colors[i])
+
+            colored = False
+            for color in range(2):
+                if color not in adj_node_color:
+                    colored = True
+                    G.colors[node] = color
+                    visited.add(node)
+                    
+            if colored == False:
+                G.reset_colors()
+                return None
+    return G.colors
 
 '''
     Part B: Implement is_independent_set.
@@ -141,6 +159,12 @@ def bfs_2_coloring(G, precolored_nodes=None):
 # Checks if subset is an independent set in G 
 def is_independent_set(G, subset):
     # TODO: Complete this function
+
+    for node in subset:
+        for i in G.edges[node]:
+            if i in subset:
+
+                return False
 
     return True
 
@@ -169,6 +193,15 @@ def is_independent_set(G, subset):
 # If no coloring is possible, resets all of G's colors to None and returns None.
 def iset_bfs_3_coloring(G):
     # TODO: Complete this function.
+
+    for size in range(0, G.N // 3 + 1) :
+        for subset in combinations(range(G.N), size):
+            if is_independent_set(G, subset):
+                subset = list(subset)
+                remaining = bfs_2_coloring(G, precolored_nodes=subset)
+
+                if remaining:
+                    return remaining
 
     G.reset_colors()
     return None
