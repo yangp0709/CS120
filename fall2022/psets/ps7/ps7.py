@@ -191,6 +191,7 @@ def sat_3_coloring(G):
     solver = Glucose3()
 
     # TODO: Add the clauses to the solver
+    
 
     # Attempt to solve, return None if no solution possible
     if not solver.solve():
