@@ -192,7 +192,23 @@ def sat_3_coloring(G):
 
     # TODO: Add the clauses to the solver
     
+    for i in range(G.N):
+        solver.add_clause([i*3+1, i*3+2, i*3+3])
 
+        for j in range(i+1, G.N):
+            if j in G.edges[i]:
+                solver.add_clause([-i*3-1, -j*3-1])
+                solver.add_clause([-i*3-2, -j*3-2])
+                solver.add_clause([-i*3-3, -j*3-3])
+
+    # for v in range(G.N):
+    #     solver.add_clause([v*3+1, v*3+2, v*3+3])
+
+    #     for i in G.edges[v]:
+    #         for j in range(1, 4):
+    #             solver.add_clause([-v*3-j, -i*3-j])
+
+            
     # Attempt to solve, return None if no solution possible
     if not solver.solve():
         G.reset_colors()
@@ -200,9 +216,16 @@ def sat_3_coloring(G):
 
     # Accesses the model in form [-v1, v2, -v3 ...], which denotes v1 = False, v2 = True, v3 = False, etc.
     solution = solver.get_model()
-
     # TODO: If a solution is found, convert it into a coloring and update G.colors
 
+    for i in range(len(solution)):
+        if solution[i] > 0:
+            G.colors[(solution[i]-1)//3] = (solution[i]-1) %3
+
+    if solution is None:
+        G.reset_colors()
+        return None
+    
     return G.colors
 
 
