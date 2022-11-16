@@ -168,7 +168,7 @@ def iset_bfs_3_coloring(G):
             if G.is_independent_set(subset):
                 coloring = bfs_2_coloring(G, subset)
                 if coloring is not None:
-                    return coloring
+                   return coloring
     return None
 
 '''
